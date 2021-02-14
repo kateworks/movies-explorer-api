@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const { MONGO_DB, PORT } = require('./config');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { createUser, login } = require('./controllers/users');
 const { errorHandler } = require('./middlewares/error-handler');
 const routes = require('./routes/index.js');
@@ -16,18 +17,15 @@ mongoose.connect(MONGO_DB, {
   useUnifiedTopology: true,
 });
 
-app.use(bodyParser.json()); // для собирания JSON-формата
-
-// для приёма веб-страниц внутри POST-запроса
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(requestLogger);
 app.post('/signup', createUser);
 app.post('/signin', login);
-
-// Подключаем роуты
 app.use(routes);
 
-// Централизованная обработка ошибок
+app.use(errorLogger);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
