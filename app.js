@@ -6,12 +6,11 @@ const { createUser, login } = require('./controllers/users');
 const routes = require('./routes/index.js');
 
 const { ERROR_SERVER } = require('./utils/constants');
-
-const { PORT = 3000 } = process.env;
+const { MONGO_DB, PORT } = require('./config');
 
 const app = express();
 
-mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
+mongoose.connect(MONGO_DB, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
