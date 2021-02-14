@@ -60,7 +60,8 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (!user) {
         throw new NotFoundError('Пользователь не найден');
       }
-      res.status(STATUS_OK).send({ data: user });
+      const data = { _id: user._id, email: user.email, name: user.name };
+      res.status(STATUS_OK).send(data);
     })
     .catch(next);
 };
@@ -68,13 +69,29 @@ module.exports.getCurrentUser = (req, res, next) => {
 // ----------------------------------------------------------------------------
 // Oбновляет информацию о пользователе (email и имя)
 
-module.exports.updateProfile = (req, res, next) => {
+module.exports.updateProfile = async (req, res, next) => {
   const { name, email } = req.body;
-  User.findByIdAndUpdate(
-    req.user._id,
-    { name, email },
-    { new: true, runValidators: true, upsert: true },
-  )
-    .then((user) => res.status(STATUS_OK).send({ data: user }))
-    .catch(next);
+
+  try {
+    // Проверяем, не занят ли данный email
+    const data = await User.find({ email });
+
+    if (data.length === 1) {
+      if (data[0]._id.toString() !== req.user._id) {
+        throw new ConflictError(`Email ${email} уже занят!`);
+      }
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { name, email },
+      { new: true, runValidators: true, upsert: true },
+    );
+
+    const updatedData = { _id: user._id, email: user.email, name: user.name };
+
+    res.status(STATUS_OK).send(updatedData);
+  } catch (err) {
+    next(err);
+  }
 };
