@@ -30,6 +30,7 @@ app.use(routes);
 
 // Централизованная обработка ошибок
 app.use((err, req, res, next) => {
+  console.log(`Error ${err.statusCode} - ${err.message}`);
   const { statusCode = ERROR_SERVER, message } = err;
   const errorMessage = (statusCode === ERROR_SERVER) ? 'Ошибка на сервере' : message;
   res.status(statusCode).send({ message: errorMessage });

@@ -4,7 +4,9 @@ const User = require('../models/user.js');
 
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
+const ConflictError = require('../errors/conflict-err');
 
+const { JWT_CODE } = require('../config');
 const { STATUS_OK, STATUS_CREATED } = require('../utils/constants');
 
 // ----------------------------------------------------------------------------
@@ -20,7 +22,7 @@ module.exports.createUser = (req, res, next) => {
   User.findOne({ email })
     .then((user) => {
       if (user) {
-        throw new BadRequestError('Такой пользователь уже существует!');
+        throw new ConflictError(`Пользователь ${email} уже существует!`);
       }
       return bcrypt.hash(password, 10);
     })
@@ -40,9 +42,7 @@ module.exports.login = (req, res, next) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       res.send({
-        token: jwt.sign({ _id: user._id },
-          'super-strong-secret',
-          { expiresIn: '7d' }),
+        token: jwt.sign({ _id: user._id }, JWT_CODE, { expiresIn: '7d' }),
       });
     })
     .catch(() => {

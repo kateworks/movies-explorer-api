@@ -8,12 +8,12 @@ const {
   NODE_ENV = MODE_DEV,
   MONGO_DB = MONGO_URL,
   PORT = LOCAL_PORT,
-  JWT_SECRET = JWT_KEY,
+  JWT_CODE = JWT_KEY,
 } = process.env;
 
 module.exports = {
   NODE_ENV,
   MONGO_DB,
   PORT,
-  JWT_SECRET,
+  JWT_CODE,
 };
