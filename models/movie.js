@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const isDate = require('validator/lib/isDate');
+const isURL = require('validator/lib/isURL');
 
 const MovieSchema = new mongoose.Schema({
   country: {
@@ -16,8 +18,9 @@ const MovieSchema = new mongoose.Schema({
   year: {
     type: String,
     required: true,
-    validator(v) {
-      return /^(19|20)\d{2}$/.test(v);
+    validate: {
+      validator: (v) => isDate(v, { format: 'YYYY' }),
+      message: 'Неправильно указан год',
     },
   },
   description: {
@@ -28,27 +31,24 @@ const MovieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(v) {
-        return /^https?:\/\/(www)?[-.~_:/?#[\]@!$&'()*+,;=\w]+#?\b/gi.test(v);
-      },
+      validator: (v) => isURL(v),
+      message: 'Неправильный формат URL',
     },
   },
   trailer: {
     type: String,
     required: true,
     validate: {
-      validator(v) {
-        return /^https?:\/\/(www)?[-.~_:/?#[\]@!$&'()*+,;=\w]+#?\b/gi.test(v);
-      },
+      validator: (v) => isURL(v),
+      message: 'Неправильный формат URL',
     },
   },
   thumbnail: {
     type: String,
     required: true,
     validate: {
-      validator(v) {
-        return /^https?:\/\/(www)?[-.~_:/?#[\]@!$&'()*+,;=\w]+#?\b/gi.test(v);
-      },
+      validator: (v) => isURL(v),
+      message: 'Неправильный формат URL',
     },
   },
   owner: {

@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 
 const { MONGO_DB, PORT } = require('./config');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const { createUser, login } = require('./controllers/users');
 const { errorHandler } = require('./middlewares/error-handler');
 const routes = require('./routes/index.js');
 
@@ -27,8 +26,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
-app.post('/signup', createUser);
-app.post('/signin', login);
 app.use(routes);
 
 app.use(errorLogger);

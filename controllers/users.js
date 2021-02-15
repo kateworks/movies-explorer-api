@@ -32,7 +32,14 @@ module.exports.createUser = (req, res, next) => {
     .then((user) => res
       .status(STATUS_CREATED)
       .send({ _id: user._id, email: user.email }))
-    .catch(next);
+    .catch((err) => {
+      if (err.name.includes('ValidationError')) {
+        const errMessage = Object.values(err.errors).map((errItem) => errItem.message).join(', ');
+        next(new BadRequestError(errMessage.trim()));
+      } else {
+        next(err);
+      }
+    });
 };
 
 // ----------------------------------------------------------------------------
@@ -94,6 +101,11 @@ module.exports.updateProfile = async (req, res, next) => {
 
     res.status(STATUS_OK).send(updatedData);
   } catch (err) {
-    next(err);
+    if (err.name.includes('ValidationError')) {
+      const errMessage = Object.values(err.errors).map((errItem) => errItem.message).join(', ');
+      next(new BadRequestError(errMessage.trim()));
+    } else {
+      next(err);
+    }
   }
 };
