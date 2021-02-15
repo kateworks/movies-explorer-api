@@ -7,7 +7,9 @@ const BadRequestError = require('../errors/bad-request-err');
 const ConflictError = require('../errors/conflict-err');
 
 const { JWT_CODE } = require('../config');
-const { STATUS_OK, STATUS_CREATED } = require('../utils/constants');
+const {
+  STATUS_OK, STATUS_CREATED, ERRMSG_NO_DATA, ERRMSG_BAD_DATA, ERRMSG_NO_USER, ERRMSG_EMAIL_EXISTS,
+} = require('../utils/constants');
 
 // ----------------------------------------------------------------------------
 // Создание учетной записи нового пользователя
@@ -16,13 +18,13 @@ module.exports.createUser = (req, res, next) => {
   const { email, password, name } = req.body;
 
   if (!email || !password || !name) {
-    throw new BadRequestError('Нужны имя, почта и пароль');
+    throw new BadRequestError(ERRMSG_NO_DATA);
   }
 
   User.findOne({ email })
     .then((user) => {
       if (user) {
-        throw new ConflictError(`Пользователь ${email} уже существует!`);
+        throw new ConflictError(`${ERRMSG_EMAIL_EXISTS} ${email}`);
       }
       return bcrypt.hash(password, 10);
     })
@@ -46,7 +48,7 @@ module.exports.login = (req, res, next) => {
       });
     })
     .catch(() => {
-      throw new BadRequestError('Неправильные почта или пароль');
+      throw new BadRequestError(ERRMSG_BAD_DATA);
     })
     .catch(next);
 };
@@ -58,7 +60,7 @@ module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id).select('+password')
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Пользователь не найден');
+        throw new NotFoundError(ERRMSG_NO_USER);
       }
       const data = { _id: user._id, email: user.email, name: user.name };
       res.status(STATUS_OK).send(data);
@@ -78,7 +80,7 @@ module.exports.updateProfile = async (req, res, next) => {
 
     if (data.length === 1) {
       if (data[0]._id.toString() !== req.user._id) {
-        throw new ConflictError(`Email ${email} уже занят!`);
+        throw new ConflictError(`${ERRMSG_EMAIL_EXISTS} ${email}`);
       }
     }
 

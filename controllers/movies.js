@@ -2,7 +2,9 @@ const Movie = require('../models/movie.js');
 const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
 
-const { STATUS_OK, STATUS_CREATED } = require('../utils/constants');
+const {
+  STATUS_OK, STATUS_CREATED, ERRMSG_VALIDATION, ERRMSG_NO_FILM, ERRMSG_DELETE,
+} = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
   Movie.find({})
@@ -31,9 +33,8 @@ module.exports.createMovie = (req, res, next) => {
   })
     .then((film) => res.status(STATUS_CREATED).send({ data: film }))
     .catch((err) => {
-      console.log(`Ошибка: ${err}`);
       if (err.name.includes('ValidationError')) {
-        throw new BadRequestError('Ошибка валидации данных');
+        throw new BadRequestError(ERRMSG_VALIDATION);
       }
     })
     .catch(next);
@@ -45,13 +46,13 @@ module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(id)
     .then((film) => {
       if (!film) {
-        throw new NotFoundError('Такого фильма нет!');
+        throw new NotFoundError(ERRMSG_NO_FILM);
       }
       if (JSON.stringify(film.owner) !== JSON.stringify(req.user._id)) {
-        throw new BadRequestError('Невозможно удалить данный фильм');
+        throw new BadRequestError(ERRMSG_DELETE);
       }
       return Movie.findByIdAndRemove(id);
     })
-    .then((card) => res.status(STATUS_OK).send({ data: card }))
+    .then((film) => res.status(STATUS_OK).send(film))
     .catch(next);
 };
