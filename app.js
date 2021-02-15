@@ -1,4 +1,6 @@
 const express = require('express');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
@@ -9,6 +11,10 @@ const { errorHandler } = require('./middlewares/error-handler');
 const routes = require('./routes/index.js');
 
 const app = express();
+
+app.use(helmet());
+const limiter = rateLimit({ windowMs: 900000, max: 100 });
+app.use(limiter);
 
 mongoose.connect(MONGO_DB, {
   useNewUrlParser: true,

@@ -29,7 +29,7 @@ const MovieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return /^https?:\/\/(www)?[\-\.~_:\/\?#\[\]@!$&'\(\)*\+,;=\w]+#?\b/gi.test(v);
+        return /^https?:\/\/(www)?[-.~_:/?#[\]@!$&'()*+,;=\w]+#?\b/gi.test(v);
       },
     },
   },
@@ -38,7 +38,7 @@ const MovieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return /^https?:\/\/(www)?[\-\.~_:\/\?#\[\]@!$&'\(\)*\+,;=\w]+#?\b/gi.test(v);
+        return /^https?:\/\/(www)?[-.~_:/?#[\]@!$&'()*+,;=\w]+#?\b/gi.test(v);
       },
     },
   },
@@ -47,7 +47,7 @@ const MovieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator(v) {
-        return /^https?:\/\/(www)?[\-\.~_:\/\?#\[\]@!$&'\(\)*\+,;=\w]+#?\b/gi.test(v);
+        return /^https?:\/\/(www)?[-.~_:/?#[\]@!$&'()*+,;=\w]+#?\b/gi.test(v);
       },
     },
   },
