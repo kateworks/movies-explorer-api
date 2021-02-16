@@ -12,7 +12,12 @@ const routes = require('./routes/index.js');
 const app = express();
 
 app.use(helmet());
-const limiter = rateLimit({ windowMs: 900000, max: 100 });
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
 app.use(limiter);
 
 mongoose.connect(MONGO_DB, {
