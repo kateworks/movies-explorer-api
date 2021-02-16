@@ -27,7 +27,7 @@ const validateMovie = celebrate({
     country: Joi.string().required(),
     director: Joi.string().required(),
     duration: Joi.number().integer().positive().required(),
-    year: Joi.string().required().min(4).max(4),
+    year: Joi.string().required().pattern(/\d{4}/),
     description: Joi.string().required(),
     image: Joi.string().required().pattern(/^https?:\/\/(www)?[\w-.~_:/?#[\]@!$&'()*+,;=]+#?\b/),
     trailer: Joi.string().required().pattern(/^https?:\/\/(www)?[\w-.~_:/?#[\]@!$&'()*+,;=]+#?\b/),

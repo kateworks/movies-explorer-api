@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const isDate = require('validator/lib/isDate');
 const isURL = require('validator/lib/isURL');
 
 const { ERRMSG_BAD_FORMAT } = require('../utils/constants');
@@ -21,7 +20,9 @@ const MovieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => isDate(v, { format: 'YYYY' }),
+      validator(v) {
+        return /\d{4}/gi.test(v);
+      },
       message: `${ERRMSG_BAD_FORMAT} год`,
     },
   },
@@ -56,11 +57,6 @@ const MovieSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
-  },
-  movieId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'movie',
     required: true,
   },
   nameRU: {
