@@ -3,6 +3,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 
 const { MONGO_DB, PORT } = require('./config');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
@@ -34,6 +35,7 @@ app.use(requestLogger);
 app.use(routes);
 
 app.use(errorLogger);
+app.use(errors()); // oбработка ошибок celebrate
 app.use(errorHandler);
 
 app.listen(PORT, () => {

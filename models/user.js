@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema({
     required: [true, `${ERRMSG_EMPTY_FIELD} name`],
     minlength: [2, `${ERRMSG_MIN_LENGTH} name: 2`],
     maxlength: [30, `${ERRMSG_MAX_LENGTH} name: 30`],
-    default: 'Пользователь',
   },
 });
 
