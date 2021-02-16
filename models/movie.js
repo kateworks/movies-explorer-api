@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const isDate = require('validator/lib/isDate');
 const isURL = require('validator/lib/isURL');
 
+const { ERRMSG_BAD_FORMAT } = require('../utils/constants');
+
 const MovieSchema = new mongoose.Schema({
   country: {
     type: String,
@@ -20,7 +22,7 @@ const MovieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => isDate(v, { format: 'YYYY' }),
-      message: 'Неправильно указан год',
+      message: `${ERRMSG_BAD_FORMAT} год`,
     },
   },
   description: {
@@ -32,7 +34,7 @@ const MovieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => isURL(v),
-      message: 'Неправильный формат URL',
+      message: `${ERRMSG_BAD_FORMAT} URL`,
     },
   },
   trailer: {
@@ -40,7 +42,7 @@ const MovieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => isURL(v),
-      message: 'Неправильный формат URL',
+      message: `${ERRMSG_BAD_FORMAT} URL`,
     },
   },
   thumbnail: {
@@ -48,7 +50,7 @@ const MovieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => isURL(v),
-      message: 'Неправильный формат URL',
+      message: `${ERRMSG_BAD_FORMAT} URL`,
     },
   },
   owner: {
