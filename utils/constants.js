@@ -33,6 +33,7 @@ const ERRMSG_EMPTY_FIELD = 'Поле должно быть заполнено:';
 const ERRMSG_BAD_FORMAT = 'Неправильный формат поля:';
 const ERRMSG_MAX_LENGTH = 'Максимальная длина поля';
 const ERRMSG_MIN_LENGTH = 'Минимальная длина поля';
+const ERRMSG_BAD_URL = 'Поле должно содержать корректный URL';
 
 module.exports = {
   MODE_DEV,
@@ -69,4 +70,5 @@ module.exports = {
   ERRMSG_BAD_FORMAT,
   ERRMSG_MAX_LENGTH,
   ERRMSG_MIN_LENGTH,
+  ERRMSG_BAD_URL,
 };
