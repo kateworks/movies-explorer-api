@@ -5,6 +5,7 @@ const User = require('../models/user.js');
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const ConflictError = require('../errors/conflict-err');
+const UnauthorizedError = require('../errors/unauthorized-err');
 
 const { JWT_CODE } = require('../config');
 const {
@@ -55,7 +56,7 @@ module.exports.login = (req, res, next) => {
       });
     })
     .catch(() => {
-      throw new BadRequestError(ERRMSG_BAD_DATA);
+      throw new UnauthorizedError(ERRMSG_BAD_DATA);
     })
     .catch(next);
 };
