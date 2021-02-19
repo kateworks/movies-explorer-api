@@ -14,13 +14,6 @@ const app = express();
 
 app.use(helmet());
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
-
-app.use(limiter);
-
 mongoose.connect(MONGO_DB, {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -32,6 +25,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+});
+
+app.use(limiter);
 app.use(routes);
 
 app.use(errorLogger);
