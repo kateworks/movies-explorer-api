@@ -2,9 +2,10 @@ const Movie = require('../models/movie.js');
 const BadRequestError = require('../errors/bad-request-err');
 const NotFoundError = require('../errors/not-found-err');
 const ForbiddenError = require('../errors/forbidden-err');
+const ConflictError = require('../errors/conflict-err');
 
 const {
-  STATUS_OK, STATUS_CREATED, ERRMSG_NO_FILM, ERRMSG_DELETE,
+  STATUS_OK, STATUS_CREATED, ERRMSG_NO_FILM, ERRMSG_FILM_EXISTS, ERRMSG_DELETE,
 } = require('../utils/constants');
 
 module.exports.getMovies = (req, res, next) => {
@@ -15,34 +16,43 @@ module.exports.getMovies = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.createMovie = (req, res, next) => {
+module.exports.createMovie = async (req, res, next) => {
   const {
-    country, director, duration, year, description,
+    movieId, country, director, duration, year, description,
     image, trailer, nameRU, nameEN, thumbnail,
   } = req.body;
 
-  Movie.create({
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailer,
-    nameRU,
-    nameEN,
-    thumbnail,
-    owner: req.user._id,
-  })
-    .then((film) => res.status(STATUS_CREATED).send({ data: film }))
-    .catch((err) => {
-      if (err.name.includes('ValidationError')) {
-        const errMessage = Object.values(err.errors).map((errItem) => errItem.message).join(', ');
-        next(new BadRequestError(errMessage.trim()));
-      } else {
-        next(err);
-      }
+  try {
+    const data = await Movie.find({ movieId });
+
+    if (data.length > 0) {
+      throw new ConflictError(`${ERRMSG_FILM_EXISTS} ${movieId}`);
+    }
+
+    const film = await Movie.create({
+      movieId,
+      country,
+      director,
+      duration,
+      year,
+      description,
+      image,
+      trailer,
+      nameRU,
+      nameEN,
+      thumbnail,
+      owner: req.user._id,
     });
+
+    res.status(STATUS_CREATED).send(film);
+  } catch (err) {
+    if (err.name.includes('ValidationError')) {
+      const errMessage = Object.values(err.errors).map((errItem) => errItem.message).join(', ');
+      next(new BadRequestError(errMessage.trim()));
+    } else {
+      next(err);
+    }
+  }
 };
 
 module.exports.deleteMovie = (req, res, next) => {

@@ -4,6 +4,11 @@ const isURL = require('validator/lib/isURL');
 const { ERRMSG_BAD_FORMAT } = require('../utils/constants');
 
 const MovieSchema = new mongoose.Schema({
+  movieId: {
+    type: Number,
+    unique: true,
+    required: true,
+  },
   country: {
     type: String,
     required: true,

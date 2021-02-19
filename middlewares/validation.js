@@ -34,6 +34,7 @@ const checkUrl = (value, helpers) => {
 
 const validateMovie = celebrate({
   body: Joi.object().keys({
+    movieId: Joi.number().integer().positive().required(),
     country: Joi.string().required(),
     director: Joi.string().required(),
     duration: Joi.number().integer().positive().required(),

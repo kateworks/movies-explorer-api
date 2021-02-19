@@ -27,6 +27,7 @@ const ERRMSG_BAD_DATA = 'Неправильные почта или пароль
 const ERRMSG_EMAIL_EXISTS = 'Такая учетная запись уже существует:';
 const ERRMSG_NO_USER = 'Пользователь не найден';
 const ERRMSG_NO_FILM = 'Фильм не найден';
+const ERRMSG_FILM_EXISTS = 'Фильм с данным movieId уже существует:';
 const ERRMSG_DELETE = 'Невозможно удалить данный фильм';
 
 const ERRMSG_EMPTY_FIELD = 'Поле должно быть заполнено:';
@@ -63,6 +64,7 @@ module.exports = {
 
   ERRMSG_NO_USER,
   ERRMSG_NO_FILM,
+  ERRMSG_FILM_EXISTS,
   ERRMSG_DELETE,
   ERRMSG_EMAIL_EXISTS,
 
