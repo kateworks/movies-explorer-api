@@ -23,7 +23,7 @@ module.exports.createMovie = async (req, res, next) => {
   } = req.body;
 
   try {
-    const data = await Movie.find({ movieId });
+    const data = await Movie.find({ movieId, owner: req.user._id });
 
     if (data.length > 0) {
       throw new ConflictError(`${ERRMSG_FILM_EXISTS} ${movieId}`);

@@ -6,7 +6,7 @@ const { ERRMSG_BAD_FORMAT } = require('../utils/constants');
 const MovieSchema = new mongoose.Schema({
   movieId: {
     type: Number,
-    unique: true,
+    unique: false,
     required: true,
   },
   country: {
